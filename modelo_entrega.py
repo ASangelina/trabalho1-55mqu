@@ -99,7 +99,7 @@ for i in range(0,n-2):
     for j in range(i+1,n):
             modelo.cons.add(-modelo.x[i] + modelo.y[i, j] <= 0)
 
-#terceira
+#quarta
 for i in range(0,n-2):
     for j in range(i+1,n):
             modelo.cons.add(-modelo.x[i] + modelo.y[i, j] <= 0)
