@@ -80,11 +80,10 @@ for pair in tupla_q:
     j = pair[1]
     modelo.cons.add(-modelo.x[i] + modelo.y[i, j] <= 0)
 
-#quarta
-for pair in tupla_q:
-    i = pair[0]
-    j = pair[1]
-    modelo.cons.add(-modelo.x[j] + modelo.y[i, j] <= 0)
+#terceira
+for i in range(0,n-2):
+    for j in range(i+1,n):
+            modelo.cons.add(-modelo.x[i] + modelo.y[i, j] <= 0)
 
 
 start_time = time.time()
