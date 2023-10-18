@@ -105,7 +105,7 @@ for i in range(n):
 ## Resultados
 if str(results.solver.termination_condition) == "optimal":
     print("Solução ótima encontrada")
-    print("Valor da função objetivo:", modelo.obj())
+    print("distâncias solução:", modelo.obj())
     print("Tempo de execução:", end_time - start_time, "segundos")
 else:
     print("Otimização terminou com status:", results.solver.termination_condition)
