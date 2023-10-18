@@ -1,7 +1,0 @@
-10 instancias 3 de 500, 3 de outras e tals. okay escolhido
-- n,m,d
-- Fazer função que ler a instancias e grava os valores de n,m,d
-- Fazer um D de distâncias;
-- Se atentar aos números que estão saindo na função objetivo
-- Fazer um Q que segui as restrição: Q = {(i, j): i, j ∈ N, i < j}, ou seja se pegar (0,1) não vai pegar (1,0) assim facilita nas restrições
-

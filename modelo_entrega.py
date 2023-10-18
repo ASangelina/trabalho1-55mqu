@@ -4,7 +4,7 @@ from pyomo.environ import *
 import time
 
 
-# escolher o arquivo a ser executado
+# Leitura das instâncias do diretório das instâncias
 def listar_arquivos_caminho(caminho):
     arquivos = os.listdir(caminho)
     return arquivos
@@ -34,40 +34,39 @@ def popula_matriz(file_path):
                 matriz_distancia = [[0 for j in range(n)] for i in range(n)]
     return matriz_distancia,m,n
 
+# Escolha da instância
 imprimir_nomes_arquivos(nomes_arquivos)
 numero = int(input("Digite o número correspondente ao arquivo que deseja usar no modelo: "))
 if 1 <= numero <= len(nomes_arquivos):
     instancia = pasta_inst + str(nomes_arquivos[numero - 1])
-    #print(f"Você selecionou o arquivo: {arquivo_selecionado}")
 else:
     print("Número inválido. Por favor, escolha um número válido.")
 
 matriz_d,m,n = popula_matriz(instancia)
 
-
+## Conjunto Q
 tupla_q = []
 for i in range(n):
     for j in range(i+1,n):
         tupla_q.append((i,j))
-#print(tupla_q)
 
-## construir modelo
+## modelo
 modelo = ConcreteModel()
-## variáveis
+## variáveis binárias, X,Y
 modelo.x = Var([i for i in range(n)], domain = Binary)
 
 modelo.y = Var([i for i in range(n)], [j for j in range(n)], domain = Binary)
 
-
+## Função Objetvo
 modelo.obj = Objective(expr = sum(matriz_d[i][j] * modelo.y[i,j] for i in range(n) for j in range(i+1,n)), sense = maximize)
 
 ## restricoes
 modelo.cons = ConstraintList()
 
-# primeira,m elementos seja viável.
-
+# primeira
 modelo.cons.add(expr = (sum(modelo.x[i] for i in range(n)) == m))
     #modelo.cons.add(expr = (sum(modelo.x[i]) == m))
+
 #segunda
 for pair in tupla_q:
     i = pair[0]
@@ -80,12 +79,13 @@ for pair in tupla_q:
     j = pair[1]
     modelo.cons.add(-modelo.x[i] + modelo.y[i, j] <= 0)
 
-#terceira
-for i in range(0,n-2):
-    for j in range(i+1,n):
-            modelo.cons.add(-modelo.x[i] + modelo.y[i, j] <= 0)
+#quarta
+for pair in tupla_q:
+    i = pair[0]
+    j = pair[1]
+    modelo.cons.add(-modelo.x[j] + modelo.y[i, j] <= 0)
 
-
+# Inicio do time da execução
 start_time = time.time()
 #opt = SolverFactory('glpk', executable='C:/glpk-4.65/w64/glpsol')
 opt = SolverFactory('glpk')
@@ -94,12 +94,13 @@ end_time = time.time()
 #results.write()
 
 execution_time = end_time - start_time
+## Elementos escolhidos
 for i in range(n):
     if modelo.x[i]() == 1: print(i)
     #for j in range(n):
     #    if modelo.y[i, j]() == 1: print(f'{i} -> {j}')
 
-
+## Resultados
 if str(results.solver.termination_condition) == "optimal":
     print("Solução ótima encontrada")
     print("Valor da função objetivo:", modelo.obj())
@@ -107,11 +108,12 @@ if str(results.solver.termination_condition) == "optimal":
 else:
     print("Otimização terminou com status:", results.solver.termination_condition)
 
+## Função para salvar resultados
 def results_salva(output_file,ins,valor_objetivo,time_exec):
     with open(output_file, 'a', newline='') as file:
         resultado = [ins, str(valor_objetivo), str(time_exec)] 
         writer = csv.writer(file)
         writer.writerow(resultado)
 
-
-resultados_execucao = results_salva('resultados_exec.csv',instancia,modelo.obj(),end_time - start_time)
+## chamada da função para salvar
+results_salva('resultados_exec.csv',instancia,modelo.obj(),end_time - start_time)
