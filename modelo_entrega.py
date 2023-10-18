@@ -97,8 +97,9 @@ execution_time = end_time - start_time
 ## Elementos escolhidos
 itens = []
 for i in range(n):
-    if modelo.x[i]() == 1: print(i)
-    itens.append(i)
+    if modelo.x[i]() == 1: 
+        print(i)
+        itens.append(i)
     #for j in range(n):
     #    if modelo.y[i, j]() == 1: print(f'{i} -> {j}')
 
