@@ -95,8 +95,10 @@ end_time = time.time()
 
 execution_time = end_time - start_time
 ## Elementos escolhidos
+itens = []
 for i in range(n):
     if modelo.x[i]() == 1: print(i)
+    itens.append(i)
     #for j in range(n):
     #    if modelo.y[i, j]() == 1: print(f'{i} -> {j}')
 
@@ -109,11 +111,11 @@ else:
     print("Otimização terminou com status:", results.solver.termination_condition)
 
 ## Função para salvar resultados
-def results_salva(output_file,ins,valor_objetivo,time_exec):
+def results_salva(output_file,ins,itens,valor_objetivo,time_exec):
     with open(output_file, 'a', newline='') as file:
-        resultado = [ins, str(valor_objetivo), str(time_exec)] 
+        resultado = [ins, itens, str(valor_objetivo), str(time_exec)] 
         writer = csv.writer(file)
         writer.writerow(resultado)
 
 ## chamada da função para salvar
-results_salva('resultados_exec.csv',instancia,modelo.obj(),end_time - start_time)
+results_salva('resultados_exec.csv',instancia, itens,modelo.obj(),end_time - start_time)
