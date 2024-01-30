@@ -8,7 +8,7 @@ import time
 def listar_arquivos_caminho(caminho):
     arquivos = os.listdir(caminho)
     return arquivos
-pasta_inst = 'instancias/'
+pasta_inst = 'instancias_heu/'
 nomes_arquivos = listar_arquivos_caminho(pasta_inst)
 
 def imprimir_nomes_arquivos(nomes_arquivos):
@@ -87,12 +87,12 @@ for pair in tupla_q:
 
 # Inicio do time da execução
 start_time = time.time()
-#opt = SolverFactory('glpk', executable='C:/glpk-4.65/w64/glpsol')
-opt = SolverFactory('glpk')
-results = opt.solve(modelo)
+opt = SolverFactory('glpk', executable='C:/glpk-4.65/w64/glpsol')
+#opt = SolverFactory('glpk')
+results = opt.solve(modelo, timelimit=300)
 end_time = time.time()
 #results.write()
-
+#em segundos
 execution_time = end_time - start_time
 ## Elementos escolhidos
 itens = []
@@ -119,4 +119,4 @@ def results_salva(output_file,ins,itens,valor_objetivo,time_exec):
         writer.writerow(resultado)
 
 ## chamada da função para salvar
-results_salva('resultados_exec.csv',instancia, itens,modelo.obj(),end_time - start_time)
+results_salva('resultados_execution_2_solver.csv',instancia, itens,modelo.obj(),execution_time)
